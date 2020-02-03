@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>MyIntro</title>
+</head>
+<body>
+    <h1>自我介紹產生器</h1>
+    <!-- onsubmit 攔截送出的資料 -->
+    <!-- creatIntro 呼叫一個自定義方法 -->
+    <form onsubmit="creatIntro(event)">
+        <label for="">名字</label>
+        <input id="nameInput" type="text">
+        <br>
+        <br>
+        <label for="">電話</label>
+        <input id="phoneInput" type="text">
+        <br>
+        <br>
+        <button type = "submit">產生自我介紹</button>
+    </form>
+    <p id="report"></p>
+    <script src="./intro.js"></script>
+</body>
+</html>
