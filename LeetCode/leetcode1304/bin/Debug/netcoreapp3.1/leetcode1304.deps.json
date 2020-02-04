@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "leetcode1304/1.0.0": {
+        "runtime": {
+          "leetcode1304.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "leetcode1304/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,0 +1,11 @@
+D:\source\leetCodeEasy349\bin\Debug\netcoreapp3.1\leetCodeEasy349.exe
+D:\source\leetCodeEasy349\bin\Debug\netcoreapp3.1\leetCodeEasy349.deps.json
+D:\source\leetCodeEasy349\bin\Debug\netcoreapp3.1\leetCodeEasy349.runtimeconfig.json
+D:\source\leetCodeEasy349\bin\Debug\netcoreapp3.1\leetCodeEasy349.runtimeconfig.dev.json
+D:\source\leetCodeEasy349\bin\Debug\netcoreapp3.1\leetCodeEasy349.dll
+D:\source\leetCodeEasy349\bin\Debug\netcoreapp3.1\leetCodeEasy349.pdb
+D:\source\leetCodeEasy349\obj\Debug\netcoreapp3.1\leetCodeEasy349.csprojAssemblyReference.cache
+D:\source\leetCodeEasy349\obj\Debug\netcoreapp3.1\leetCodeEasy349.AssemblyInfoInputs.cache
+D:\source\leetCodeEasy349\obj\Debug\netcoreapp3.1\leetCodeEasy349.AssemblyInfo.cs
+D:\source\leetCodeEasy349\obj\Debug\netcoreapp3.1\leetCodeEasy349.dll
+D:\source\leetCodeEasy349\obj\Debug\netcoreapp3.1\leetCodeEasy349.pdb

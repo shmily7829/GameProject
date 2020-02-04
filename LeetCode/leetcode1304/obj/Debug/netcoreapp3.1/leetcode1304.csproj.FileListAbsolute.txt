@@ -1,0 +1,11 @@
+D:\source\leetcode1304\bin\Debug\netcoreapp3.1\leetcode1304.exe
+D:\source\leetcode1304\bin\Debug\netcoreapp3.1\leetcode1304.deps.json
+D:\source\leetcode1304\bin\Debug\netcoreapp3.1\leetcode1304.runtimeconfig.json
+D:\source\leetcode1304\bin\Debug\netcoreapp3.1\leetcode1304.runtimeconfig.dev.json
+D:\source\leetcode1304\bin\Debug\netcoreapp3.1\leetcode1304.dll
+D:\source\leetcode1304\bin\Debug\netcoreapp3.1\leetcode1304.pdb
+D:\source\leetcode1304\obj\Debug\netcoreapp3.1\leetcode1304.csprojAssemblyReference.cache
+D:\source\leetcode1304\obj\Debug\netcoreapp3.1\leetcode1304.AssemblyInfoInputs.cache
+D:\source\leetcode1304\obj\Debug\netcoreapp3.1\leetcode1304.AssemblyInfo.cs
+D:\source\leetcode1304\obj\Debug\netcoreapp3.1\leetcode1304.dll
+D:\source\leetcode1304\obj\Debug\netcoreapp3.1\leetcode1304.pdb

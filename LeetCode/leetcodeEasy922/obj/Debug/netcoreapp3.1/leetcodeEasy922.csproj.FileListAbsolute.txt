@@ -1,0 +1,11 @@
+D:\source\leetcodeEasy922\obj\Debug\netcoreapp3.1\leetcodeEasy922.csprojAssemblyReference.cache
+D:\source\leetcodeEasy922\obj\Debug\netcoreapp3.1\leetcodeEasy922.AssemblyInfoInputs.cache
+D:\source\leetcodeEasy922\obj\Debug\netcoreapp3.1\leetcodeEasy922.AssemblyInfo.cs
+D:\source\leetcodeEasy922\bin\Debug\netcoreapp3.1\leetcodeEasy922.exe
+D:\source\leetcodeEasy922\bin\Debug\netcoreapp3.1\leetcodeEasy922.deps.json
+D:\source\leetcodeEasy922\bin\Debug\netcoreapp3.1\leetcodeEasy922.runtimeconfig.json
+D:\source\leetcodeEasy922\bin\Debug\netcoreapp3.1\leetcodeEasy922.runtimeconfig.dev.json
+D:\source\leetcodeEasy922\bin\Debug\netcoreapp3.1\leetcodeEasy922.dll
+D:\source\leetcodeEasy922\bin\Debug\netcoreapp3.1\leetcodeEasy922.pdb
+D:\source\leetcodeEasy922\obj\Debug\netcoreapp3.1\leetcodeEasy922.dll
+D:\source\leetcodeEasy922\obj\Debug\netcoreapp3.1\leetcodeEasy922.pdb

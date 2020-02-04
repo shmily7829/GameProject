@@ -1,0 +1,11 @@
+D:\source\leetCodeEasy21\bin\Debug\netcoreapp3.1\leetCodeEasy21.exe
+D:\source\leetCodeEasy21\bin\Debug\netcoreapp3.1\leetCodeEasy21.deps.json
+D:\source\leetCodeEasy21\bin\Debug\netcoreapp3.1\leetCodeEasy21.runtimeconfig.json
+D:\source\leetCodeEasy21\bin\Debug\netcoreapp3.1\leetCodeEasy21.runtimeconfig.dev.json
+D:\source\leetCodeEasy21\bin\Debug\netcoreapp3.1\leetCodeEasy21.dll
+D:\source\leetCodeEasy21\bin\Debug\netcoreapp3.1\leetCodeEasy21.pdb
+D:\source\leetCodeEasy21\obj\Debug\netcoreapp3.1\leetCodeEasy21.csprojAssemblyReference.cache
+D:\source\leetCodeEasy21\obj\Debug\netcoreapp3.1\leetCodeEasy21.AssemblyInfoInputs.cache
+D:\source\leetCodeEasy21\obj\Debug\netcoreapp3.1\leetCodeEasy21.AssemblyInfo.cs
+D:\source\leetCodeEasy21\obj\Debug\netcoreapp3.1\leetCodeEasy21.dll
+D:\source\leetCodeEasy21\obj\Debug\netcoreapp3.1\leetCodeEasy21.pdb

@@ -1,0 +1,11 @@
+D:\source\BubbleSortAlgorithm\bin\Debug\netcoreapp3.1\BubbleSortAlgorithm.exe
+D:\source\BubbleSortAlgorithm\bin\Debug\netcoreapp3.1\BubbleSortAlgorithm.deps.json
+D:\source\BubbleSortAlgorithm\bin\Debug\netcoreapp3.1\BubbleSortAlgorithm.runtimeconfig.json
+D:\source\BubbleSortAlgorithm\bin\Debug\netcoreapp3.1\BubbleSortAlgorithm.runtimeconfig.dev.json
+D:\source\BubbleSortAlgorithm\bin\Debug\netcoreapp3.1\BubbleSortAlgorithm.dll
+D:\source\BubbleSortAlgorithm\bin\Debug\netcoreapp3.1\BubbleSortAlgorithm.pdb
+D:\source\BubbleSortAlgorithm\obj\Debug\netcoreapp3.1\BubbleSortAlgorithm.csprojAssemblyReference.cache
+D:\source\BubbleSortAlgorithm\obj\Debug\netcoreapp3.1\BubbleSortAlgorithm.AssemblyInfoInputs.cache
+D:\source\BubbleSortAlgorithm\obj\Debug\netcoreapp3.1\BubbleSortAlgorithm.AssemblyInfo.cs
+D:\source\BubbleSortAlgorithm\obj\Debug\netcoreapp3.1\BubbleSortAlgorithm.dll
+D:\source\BubbleSortAlgorithm\obj\Debug\netcoreapp3.1\BubbleSortAlgorithm.pdb

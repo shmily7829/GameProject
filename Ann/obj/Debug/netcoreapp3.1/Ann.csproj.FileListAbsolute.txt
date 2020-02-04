@@ -1,0 +1,11 @@
+D:\source\Ann\bin\Debug\netcoreapp3.1\Ann.exe
+D:\source\Ann\bin\Debug\netcoreapp3.1\Ann.deps.json
+D:\source\Ann\bin\Debug\netcoreapp3.1\Ann.runtimeconfig.json
+D:\source\Ann\bin\Debug\netcoreapp3.1\Ann.runtimeconfig.dev.json
+D:\source\Ann\bin\Debug\netcoreapp3.1\Ann.dll
+D:\source\Ann\bin\Debug\netcoreapp3.1\Ann.pdb
+D:\source\Ann\obj\Debug\netcoreapp3.1\Ann.csprojAssemblyReference.cache
+D:\source\Ann\obj\Debug\netcoreapp3.1\Ann.AssemblyInfoInputs.cache
+D:\source\Ann\obj\Debug\netcoreapp3.1\Ann.AssemblyInfo.cs
+D:\source\Ann\obj\Debug\netcoreapp3.1\Ann.dll
+D:\source\Ann\obj\Debug\netcoreapp3.1\Ann.pdb
