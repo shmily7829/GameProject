@@ -18,14 +18,20 @@ namespace WinFormCirclePunch
         private Point[] vBullet;
 
         private Random random;
-        private float BALL_SIZE = 25; //圓形半徑
+
+        private Graphics wndGraphics; //視窗畫布
+        private Graphics backGraphics;//背景頁畫布
+        private Bitmap backBmp;//點陣圖
+
+        private float makeMonsterTime; //生怪的時間
 
         //設定常數
-        private const int MAX_ENEMY = 3; //敵人最大數量
+        private const float BALL_SIZE = 25; //圓形半徑
+        private const int MAX_ENEMY = 10; //敵人最大數量
         private const int MAX_BULLET = 5; //子彈最大數量
         private const int BULLET_SPEED = 5;
         private const int PLAYER_SPEED = 10;
-
+        private const float MAKE_MONSTER_TIME = 3;
 
         //設定範圍
         private const int VIEW_W = 1024;
@@ -35,6 +41,13 @@ namespace WinFormCirclePunch
         public UserControl1()
         {
             InitializeComponent();
+
+            makeMonsterTime = MAKE_MONSTER_TIME;
+
+            wndGraphics = CreateGraphics();//建立視窗畫布
+
+            backBmp = new Bitmap(VIEW_W, VIEW_H);//建立點陣圖物件
+            backGraphics = Graphics.FromImage(backBmp);//建立背景畫布
 
             random = new Random();
 
@@ -63,37 +76,34 @@ namespace WinFormCirclePunch
 
         private void onPaint(object sender, PaintEventArgs e)
         {
+            drawGame();
+            ////參數: x,y,w,h
+            ////主角
+            //e.Graphics.DrawEllipse(Pens.Blue, player.x, player.y, BALL_SIZE * 2, BALL_SIZE * 2);
 
-            //參數: x,y,w,h
-            //主角
-            e.Graphics.DrawEllipse(Pens.Blue, player.x, player.y, BALL_SIZE * 2, BALL_SIZE * 2);
+            ////子彈,按下按鍵 = 不等於null時才會產生子彈
+            ////子彈數量小於MAX值時，按下按鍵就會繼續產生子彈
+            //for (int i = 0; i < MAX_BULLET; i++)
+            //{
+            //    if (vBullet[i] != null)
+            //    {
+            //        e.Graphics.DrawEllipse(Pens.Black, vBullet[i].x, vBullet[i].y, BALL_SIZE, BALL_SIZE);
+            //    }
+            //}
 
-            //子彈,按下按鍵 = 不等於null時才會產生子彈
-            //子彈數量小於MAX值時，按下按鍵就會繼續產生子彈
-            for (int i = 0; i < MAX_BULLET; i++)
-            {
-                if (vBullet[i] != null)
-                {
-                    e.Graphics.DrawEllipse(Pens.Black, vBullet[i].x, vBullet[i].y, BALL_SIZE, BALL_SIZE);
-                }
-            }
-
-            //怪物
-            for (int i = 0; i < MAX_ENEMY; i++)
-            {
-                if (vMonster[i] != null)
-                {
-                    e.Graphics.DrawEllipse(Pens.Red, vMonster[i].x, vMonster[i].y, BALL_SIZE * 2, BALL_SIZE * 2);
-                }
-            }
+            ////怪物
+            //for (int i = 0; i < MAX_ENEMY; i++)
+            //{
+            //    if (vMonster[i] != null)
+            //    {
+            //        e.Graphics.DrawEllipse(Pens.Red, vMonster[i].x, vMonster[i].y, BALL_SIZE * 2, BALL_SIZE * 2);
+            //    }
+            //}
         }
 
-        //定時呼叫onTimer
-        //時間到了就會呼叫onTimer
-        private void onTimer(object sender, EventArgs e)
+        private void moveMonster()
         {
             //當兩點距離不等於零，取得下一步的座標
-
             for (int i = 0; i < MAX_ENEMY; i++)
             {
                 //呼叫玩家的取距離的方法
@@ -106,15 +116,20 @@ namespace WinFormCirclePunch
                     //把move做成方法來呼叫
                     vMonster[i].move(player);
 
+                    /*
                     //取怪物和玩家的距離,小於兩個圓形半徑
                     if (vMonster[i].getDistance(player) < BALL_SIZE + BALL_SIZE)
                     {
                         //重疊,把怪砍掉
                         vMonster[i] = null;
                     }
+                    */
                 }
             }
 
+        }
+        private void moveBullet_killMonster()
+        {
             for (int i = 0; i < MAX_BULLET; i++)
             {
                 if (vBullet[i] != null)
@@ -158,13 +173,70 @@ namespace WinFormCirclePunch
                 //}
             }
 
-            Invalidate();//通知重繪畫面
+        }
+
+        private void drawGame()
+        {
+            backGraphics.FillRectangle(Brushes.White, 0, 0, VIEW_W, VIEW_H);
+            //把物件畫在背A景頁畫布上
+            backGraphics.DrawEllipse(Pens.Blue, player.x, player.y, BALL_SIZE * 2, BALL_SIZE * 2);
+
+            for (int i = 0; i < MAX_BULLET; i++)
+            {
+                if (vBullet[i] != null)
+                {
+                    backGraphics.DrawEllipse(Pens.Black, vBullet[i].x, vBullet[i].y, BALL_SIZE, BALL_SIZE);
+                }
+            }
+            for (int i = 0; i < MAX_ENEMY; i++)
+            {
+                if (vMonster[i] != null)
+                {
+                    backGraphics.DrawEllipse(Pens.Red, vMonster[i].x, vMonster[i].y, BALL_SIZE * 2, BALL_SIZE * 2);
+                }
+            }
+            //把背景頁畫到視窗頁上面
+            wndGraphics.DrawImageUnscaled(backBmp, 0, 0);
+
+
+            //Invalidate();//通知重繪畫面，把背景塗白然後重繪
+        }
+
+        //定時呼叫onTimer
+        //時間到了就會呼叫onTimer
+        private void onTimer(object sender, EventArgs e)
+        {
+            makeMonsterTime -= 1.0f / 30.0f; // 1/30秒
+            if (makeMonsterTime <=0)
+            {
+                //生怪時間到了
+                for (int i = 0; i < MAX_ENEMY; i++)
+                {
+                    if (vMonster[i] == null)
+                    {
+                        vMonster[i] = new Point();
+
+                        vMonster[i].x = random.Next(0, VIEW_H);
+                        vMonster[i].y = random.Next(0, VIEW_W);
+                        break;
+                    }
+                }
+                makeMonsterTime = MAKE_MONSTER_TIME;
+            }
+
+
+            moveMonster();
+
+            moveBullet_killMonster();
+
+            drawGame();
+
         }
 
         private void onKeyPress(object sender, KeyPressEventArgs e)
         {
             //e.KeyChar 按鍵編號
-            if (e.KeyChar == 'd')//100
+            if (e.KeyChar == 'd')//d100
                 player.x += PLAYER_SPEED;
             if (e.KeyChar == 'a')//A97
                 player.x -= PLAYER_SPEED;
