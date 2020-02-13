@@ -44,6 +44,7 @@
             this.Size = new System.Drawing.Size(1024, 768);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.onPaint);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.onKeyPress);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.onMouseMove);
             this.ResumeLayout(false);
 
         }

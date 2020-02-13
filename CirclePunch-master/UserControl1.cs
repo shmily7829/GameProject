@@ -15,7 +15,8 @@ namespace WinFormCirclePunch
         //宣告變數
         private Point player;
         private Point[] vMonster;
-        private Point[] vBullet;
+        //private Point[] vBullet;
+        private Bullet[] vBullet;//子彈的座標
 
         private Random random;
 
@@ -28,10 +29,11 @@ namespace WinFormCirclePunch
         //設定常數
         private const float BALL_SIZE = 25; //圓形半徑
         private const int MAX_ENEMY = 10; //敵人最大數量
-        private const int MAX_BULLET = 5; //子彈最大數量
-        private const int BULLET_SPEED = 5;
+        private const int MAX_BULLET = 10; //子彈最大數量
         private const int PLAYER_SPEED = 10;
         private const float MAKE_MONSTER_TIME = 3;
+
+        private Point mousePos;
 
         //設定範圍
         private const int VIEW_W = 1024;
@@ -51,13 +53,15 @@ namespace WinFormCirclePunch
 
             random = new Random();
 
+            mousePos = new Point();
+
             //宣告圈圈座標
             player = new Point();
             player.x = 200;
             player.y = 100;
 
             vMonster = new Point[MAX_ENEMY];
-            vBullet = new Point[MAX_BULLET];
+            vBullet = new Bullet[MAX_BULLET];
 
 
             for (int i = 0; i < MAX_ENEMY; i++)
@@ -134,13 +138,18 @@ namespace WinFormCirclePunch
             {
                 if (vBullet[i] != null)
                 {
-                    vBullet[i].x += BULLET_SPEED;
+                    //vBullet[i].x += BULLET_SPEED;
+                    vBullet[i].move();
 
                     //檢查有沒有打到怪
                     for (int m = 0; m < MAX_ENEMY; m++)
                     {
                         if (vMonster[m] != null)
-                        {   //取得怪物和子彈的距離< 兩個人的半徑(重疊)
+                        {
+                            //vMonster:Point
+                            //vBullet:Bullet
+                            //getDistance(可以傳入子類別的參數)
+                            //取得怪物和子彈的距離< 兩個人的半徑(重疊)
                             //就把怪和子彈砍掉
                             if (vMonster[m].getDistance(vBullet[i]) < BALL_SIZE + BALL_SIZE)
                             {
@@ -153,10 +162,24 @@ namespace WinFormCirclePunch
                     //第二次檢查, 如果子彈沒打到怪
                     if (vBullet[i] != null)
                     {
+
                         if (vBullet[i].x > VIEW_W)
                         {
                             vBullet[i] = null;
                         }
+                        else if (vBullet[i].y > VIEW_H)
+                        {
+                            vBullet[i] = null;
+                        }
+                        else if (vBullet[i].x < 0)
+                        {
+                            vBullet[i] = null;
+                        }
+                        else if (vBullet[i].y < 0)
+                        {
+                            vBullet[i] = null;
+                        }
+
                     }
                 }
                 //if (L > 5)
@@ -181,10 +204,12 @@ namespace WinFormCirclePunch
             //把物件畫在背A景頁畫布上
             backGraphics.DrawEllipse(Pens.Blue, player.x, player.y, BALL_SIZE * 2, BALL_SIZE * 2);
 
+            int total = MAX_BULLET; //計算子彈的總數
             for (int i = 0; i < MAX_BULLET; i++)
             {
                 if (vBullet[i] != null)
                 {
+                    total--;
                     backGraphics.DrawEllipse(Pens.Black, vBullet[i].x, vBullet[i].y, BALL_SIZE, BALL_SIZE);
                 }
             }
@@ -195,6 +220,12 @@ namespace WinFormCirclePunch
                     backGraphics.DrawEllipse(Pens.Red, vMonster[i].x, vMonster[i].y, BALL_SIZE * 2, BALL_SIZE * 2);
                 }
             }
+
+            //子彈的數量
+            String str = "子彈數量: " + total;
+            backGraphics.DrawString(str, SystemFonts.CaptionFont, Brushes.Black, 0, 0);
+
+
             //把背景頁畫到視窗頁上面
             wndGraphics.DrawImageUnscaled(backBmp, 0, 0);
 
@@ -207,7 +238,7 @@ namespace WinFormCirclePunch
         private void onTimer(object sender, EventArgs e)
         {
             makeMonsterTime -= 1.0f / 30.0f; // 1/30秒
-            if (makeMonsterTime <=0)
+            if (makeMonsterTime <= 0)
             {
                 //生怪時間到了
                 for (int i = 0; i < MAX_ENEMY; i++)
@@ -252,7 +283,7 @@ namespace WinFormCirclePunch
                 {
                     if (vBullet[i] == null)
                     {
-                        vBullet[i] = new Point();
+                        vBullet[i] = new Bullet(player, mousePos);
                         //子彈的座標=玩家座標
                         vBullet[i].x = player.x;
                         vBullet[i].y = player.y;
@@ -261,6 +292,13 @@ namespace WinFormCirclePunch
                     }
                 }
             }
+        }
+
+        //滑鼠移動的通知
+        private void onMouseMove(object sender, MouseEventArgs e)
+        {
+            mousePos.x = e.X;
+            mousePos.y = e.Y;
         }
     }
     //類別
@@ -311,5 +349,46 @@ namespace WinFormCirclePunch
                 y = target.y;
             }
         }
+    }
+    //繼承
+    //加強,修改父類別
+    //定義類別時加入:Point
+    //Bullet 子類別
+    //Point父類別
+    //子類別會擁有父類別所有的功能(方法).資料
+    class Bullet : Point
+    {
+        private Point moveDir;//移動的向量
+        private const int BULLET_SPEED = 5;
+
+        //建構方法
+        //方法名稱和類別名稱相同
+        //當new某個物件(實體)的時候
+        //會呼叫這個物件(實體)的建構方法
+        public Bullet(Point pos, Point mousePos)//建構
+        {
+            //設定自己(主角)的座標
+            x = pos.x;
+            y = pos.y;
+
+            //取主角與滑鼠的距離
+            float dist = getDistance(mousePos);
+
+            //產生方向的物件
+            moveDir = new Point();
+            //計算出滑鼠與主角之間的向量
+            moveDir.x = (mousePos.x - pos.x) / dist * BULLET_SPEED;
+            moveDir.y = (mousePos.y - pos.y) / dist * BULLET_SPEED;
+
+
+        }
+
+        public void move()
+        {
+            //base. 使用父類別的move功能
+            x += moveDir.x;
+            y += moveDir.y;
+        }
+
     }
 }
