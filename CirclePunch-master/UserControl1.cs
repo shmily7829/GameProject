@@ -25,24 +25,32 @@ namespace WinFormCirclePunch
         private Bitmap backBmp;//點陣圖
 
         private float makeMonsterTime; //生怪的時間
+        private float makeBulletTime; //再過多久生子彈的時間
 
         //設定常數
         private const float BALL_SIZE = 25; //圓形半徑
         private const int MAX_ENEMY = 10; //敵人最大數量
         private const int MAX_BULLET = 10; //子彈最大數量
         private const int PLAYER_SPEED = 10;
-        private const float MAKE_MONSTER_TIME = 3;
+        private const float MAKE_MONSTER_TIME = 3; //每3秒生怪
+        private const float MAKE_BULLET_TIME = 0.2f; //每0.2秒生子彈
+        private const float REQUIRE_FPS = 60; //預期的畫面更新率(每秒呼叫幾次OnTimer)
 
         private Point mousePos;
+        //布林值
+        private bool isSpaceDown;//空白鍵是否按著
 
         //設定範圍
-        private const int VIEW_W = 1024;
-        private const int VIEW_H = 768;
+        private const int VIEW_W = 800;
+        private const int VIEW_H = 600;
 
-        //運作流程 = UserControl1() → onTimer() → onPaint()
+        //運作流程 = UserControl1() → onTimer() → onPaint() → drawGame()
         public UserControl1()
         {
             InitializeComponent();
+
+            isSpaceDown = false;
+            makeBulletTime = 0;
 
             makeMonsterTime = MAKE_MONSTER_TIME;
 
@@ -74,7 +82,7 @@ namespace WinFormCirclePunch
             //timer1 = 計時器物件
             //timer.Interval 多久響
             //單位千分之一秒
-            timer1.Interval = 1000 / 30;
+            timer1.Interval = 1000 / (int)REQUIRE_FPS; //1/30秒
             timer1.Start();
         }
 
@@ -200,31 +208,64 @@ namespace WinFormCirclePunch
 
         private void drawGame()
         {
+            //畫出畫布
             backGraphics.FillRectangle(Brushes.White, 0, 0, VIEW_W, VIEW_H);
-            //把物件畫在背A景頁畫布上
+
+            //把物件畫在背景頁畫布上
             backGraphics.DrawEllipse(Pens.Blue, player.x, player.y, BALL_SIZE * 2, BALL_SIZE * 2);
 
+            //畫出子彈
+            //int total = MAX_BULLET; //計算子彈的總數
+            //for (int i = 0; i < MAX_BULLET; i++)
+            //{
+            //    if (vBullet[i] != null)
+            //    {
+            //        total--;
+            //        backGraphics.DrawEllipse(Pens.Black, vBullet[i].x, vBullet[i].y, BALL_SIZE, BALL_SIZE);
+            //    }
+            //}
+
+            //畫出子彈
             int total = MAX_BULLET; //計算子彈的總數
             for (int i = 0; i < MAX_BULLET; i++)
             {
-                if (vBullet[i] != null)
-                {
-                    total--;
-                    backGraphics.DrawEllipse(Pens.Black, vBullet[i].x, vBullet[i].y, BALL_SIZE, BALL_SIZE);
-                }
+                Bullet bullet = vBullet[i];
+                if (bullet == null)
+                    continue;
+                total--;
+                backGraphics.DrawEllipse(Pens.Black, bullet.x, bullet.y, BALL_SIZE, BALL_SIZE);
+
             }
+
+            //顯示子彈的數量
+            String str = "子彈數量: " + total;
+            backGraphics.DrawString(str, SystemFonts.CaptionFont, Brushes.Black, 0, 0);
+
+            //畫出怪
+            total = 0;
             for (int i = 0; i < MAX_ENEMY; i++)
             {
+
                 if (vMonster[i] != null)
                 {
+                    total++;
                     backGraphics.DrawEllipse(Pens.Red, vMonster[i].x, vMonster[i].y, BALL_SIZE * 2, BALL_SIZE * 2);
                 }
             }
 
-            //子彈的數量
-            String str = "子彈數量: " + total;
-            backGraphics.DrawString(str, SystemFonts.CaptionFont, Brushes.Black, 0, 0);
+            //顯示怪物數量
+            str = "怪物數量: " + total;
+            backGraphics.DrawString(str, SystemFonts.CaptionFont, Brushes.Black, 0, 20);
 
+            //顯示是否按下Space按鍵
+            if (isSpaceDown)  //同等於 isSpaceDown == true
+            {
+                backGraphics.DrawString("space down: "+ makeBulletTime, SystemFonts.CaptionFont, Brushes.Blue, 0, 40);
+            }
+            else
+            {
+                backGraphics.DrawString("space up: "+ makeBulletTime, SystemFonts.CaptionFont, Brushes.Red, 0, 40);
+            }
 
             //把背景頁畫到視窗頁上面
             wndGraphics.DrawImageUnscaled(backBmp, 0, 0);
@@ -237,7 +278,20 @@ namespace WinFormCirclePunch
         //時間到了就會呼叫onTimer
         private void onTimer(object sender, EventArgs e)
         {
-            makeMonsterTime -= 1.0f / 30.0f; // 1/30秒
+            if (isSpaceDown)
+            {
+                //按住空白鍵
+                makeBulletTime -= 1.0f / REQUIRE_FPS;
+                if (makeBulletTime <= 0)
+                {
+                    //發射子彈的時間到了
+                    fireBullet();
+                }
+            }
+
+
+            makeMonsterTime -= 1.0f / REQUIRE_FPS; // 1/30秒
+
             if (makeMonsterTime <= 0)
             {
                 //生怪時間到了
@@ -264,6 +318,21 @@ namespace WinFormCirclePunch
 
         }
 
+        private void fireBullet()
+        {
+            for (int i = 0; i < MAX_BULLET; i++)
+            {
+                if (vBullet[i] == null)
+                {
+                    vBullet[i] = new Bullet(player, mousePos);
+                    //子彈的座標=玩家座標
+                    vBullet[i].x = player.x;
+                    vBullet[i].y = player.y;
+                    makeBulletTime = MAKE_BULLET_TIME;
+                    break;
+                }
+            }
+        }
         private void onKeyPress(object sender, KeyPressEventArgs e)
         {
             //e.KeyChar 按鍵編號
@@ -279,18 +348,17 @@ namespace WinFormCirclePunch
             //按下按鍵就發射子彈
             if (e.KeyChar == ' ')
             {
-                for (int i = 0; i < MAX_BULLET; i++)
+                if (isSpaceDown)
                 {
-                    if (vBullet[i] == null)
-                    {
-                        vBullet[i] = new Bullet(player, mousePos);
-                        //子彈的座標=玩家座標
-                        vBullet[i].x = player.x;
-                        vBullet[i].y = player.y;
-
-                        break;
-                    }
+                    //系統通知的連發,不要理他
+                    //亦即按住Space鍵只會發一顆子彈
                 }
+                else
+                {
+                    //原本放開,剛剛按下去
+                    fireBullet();//發射子彈
+                }
+                isSpaceDown = true;
             }
         }
 
@@ -299,6 +367,15 @@ namespace WinFormCirclePunch
         {
             mousePos.x = e.X;
             mousePos.y = e.Y;
+        }
+
+        private void onKeyUp(object sender, KeyEventArgs e)
+        {
+            //按鍵放開的通知
+            if (e.KeyCode == Keys.Space)
+            {
+                isSpaceDown = false;
+            }
         }
     }
     //類別

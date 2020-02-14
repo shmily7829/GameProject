@@ -41,9 +41,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "UserControl1";
-            this.Size = new System.Drawing.Size(1024, 768);
+            this.Size = new System.Drawing.Size(800, 600);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.onPaint);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.onKeyPress);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.onKeyUp);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.onMouseMove);
             this.ResumeLayout(false);
 
