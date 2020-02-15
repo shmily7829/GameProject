@@ -446,6 +446,7 @@ namespace WinFormCirclePunch
             }
             */
         }
+
     }
 
     //按鍵狀態
