@@ -43,6 +43,7 @@
             this.Name = "UserControl1";
             this.Size = new System.Drawing.Size(800, 600);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.onPaint);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.onKeyDown);
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.onKeyPress);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.onKeyUp);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.onMouseMove);

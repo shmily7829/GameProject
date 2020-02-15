@@ -38,7 +38,12 @@ namespace WinFormCirclePunch
 
         private Point mousePos;
         //布林值
-        private bool isSpaceDown;//空白鍵是否按著
+        //private bool isSpaceDown;//空白鍵是否按著
+        private KeyState keySpace;//空白鍵
+        private KeyState keyUp;   //上
+        private KeyState keyDown; //下
+        private KeyState keyLeft; //左
+        private KeyState keyRight;//右
 
         //設定範圍
         private const int VIEW_W = 800;
@@ -49,10 +54,17 @@ namespace WinFormCirclePunch
         {
             InitializeComponent();
 
-            isSpaceDown = false;
+            //isSpaceDown = false;
+            keySpace = new KeyState(Keys.Space);
+            keyUp = new KeyState(Keys.Up);   //上
+            keyDown = new KeyState(Keys.Down); //下
+            keyLeft = new KeyState(Keys.Left); //左
+            keyRight = new KeyState(Keys.Right);
+
             makeBulletTime = 0;
 
             makeMonsterTime = MAKE_MONSTER_TIME;
+
 
             wndGraphics = CreateGraphics();//建立視窗畫布
 
@@ -258,13 +270,13 @@ namespace WinFormCirclePunch
             backGraphics.DrawString(str, SystemFonts.CaptionFont, Brushes.Black, 0, 20);
 
             //顯示是否按下Space按鍵
-            if (isSpaceDown)  //同等於 isSpaceDown == true
+            if (keySpace.isDown())  //同等於 isSpaceDown == true
             {
-                backGraphics.DrawString("space down: "+ makeBulletTime, SystemFonts.CaptionFont, Brushes.Blue, 0, 40);
+                backGraphics.DrawString("space down: " + makeBulletTime, SystemFonts.CaptionFont, Brushes.Blue, 0, 40);
             }
             else
             {
-                backGraphics.DrawString("space up: "+ makeBulletTime, SystemFonts.CaptionFont, Brushes.Red, 0, 40);
+                backGraphics.DrawString("space up: " + makeBulletTime, SystemFonts.CaptionFont, Brushes.Red, 0, 40);
             }
 
             //把背景頁畫到視窗頁上面
@@ -278,7 +290,22 @@ namespace WinFormCirclePunch
         //時間到了就會呼叫onTimer
         private void onTimer(object sender, EventArgs e)
         {
-            if (isSpaceDown)
+            //on timer 就是主迴圈 main loop 
+            /*
+            keySpace.onTimer();
+            keyUp.onTimer();
+            keyDown.onTimer();
+            keyLeft.onTimer();
+            keyRight.onTimer();
+            */
+            /*
+            if (keySpace.isPress())//剛剛壓下去
+            {
+                //發射子彈
+                fireBullet();
+            }
+            */
+            if (keySpace.isDown())//持續壓著
             {
                 //按住空白鍵
                 makeBulletTime -= 1.0f / REQUIRE_FPS;
@@ -289,6 +316,22 @@ namespace WinFormCirclePunch
                 }
             }
 
+            if (keyUp.isDown())
+            {
+                player.y -= PLAYER_SPEED;
+            }
+            if (keyDown.isDown())
+            {
+                player.y += PLAYER_SPEED;
+            }
+            if (keyLeft.isDown())
+            {
+                player.x -= PLAYER_SPEED;
+            }
+            if (keyRight.isDown())
+            {
+                player.y += PLAYER_SPEED;
+            }
 
             makeMonsterTime -= 1.0f / REQUIRE_FPS; // 1/30秒
 
@@ -333,20 +376,61 @@ namespace WinFormCirclePunch
                 }
             }
         }
+
+
+        //滑鼠移動的通知
+        private void onMouseMove(object sender, MouseEventArgs e)
+        {
+            mousePos.x = e.X;
+            mousePos.y = e.Y;
+        }
+
         private void onKeyPress(object sender, KeyPressEventArgs e)
         {
+
+
+        }
+
+        //按鍵放開的通知
+        private void onKeyUp(object sender, KeyEventArgs e)
+        {
+            keySpace.onKeyUp(e.KeyCode);
+            keyUp.onKeyUp(e.KeyCode);
+            keyDown.onKeyUp(e.KeyCode);
+            keyLeft.onKeyUp(e.KeyCode);
+            keyRight.onKeyUp(e.KeyCode);
+            /*
+            if (e.KeyCode == Keys.Space)
+            {
+                isSpaceDown = false;
+            }
+            */
+        }
+
+        //按下某顆按鍵的通知
+        private void onKeyDown(object sender, KeyEventArgs e)
+        {
+            
             //e.KeyChar 按鍵編號
-            if (e.KeyChar == 'd')//d100
+            if (e.KeyCode == Keys.D)//d100
                 player.x += PLAYER_SPEED;
-            if (e.KeyChar == 'a')//A97
+            if (e.KeyCode == Keys.A)//A97
                 player.x -= PLAYER_SPEED;
-            if (e.KeyChar == 's')//s115
+            if (e.KeyCode == Keys.S)//s115
                 player.y += PLAYER_SPEED;
-            if (e.KeyChar == 'w')//w119 
+            if (e.KeyCode == Keys.W)//w119 
                 player.y -= PLAYER_SPEED;
+            
+
+            keySpace.onKeyDown(e.KeyCode);
+            keyUp.onKeyDown(e.KeyCode);
+            keyDown.onKeyDown(e.KeyCode);
+            keyLeft.onKeyDown(e.KeyCode);
+            keyRight.onKeyDown(e.KeyCode);
 
             //按下按鍵就發射子彈
-            if (e.KeyChar == ' ')
+            /*
+            if (e.KeyCode == Keys.Space)
             {
                 if (isSpaceDown)
                 {
@@ -360,22 +444,70 @@ namespace WinFormCirclePunch
                 }
                 isSpaceDown = true;
             }
+            */
+        }
+    }
+
+    //按鍵狀態
+    class KeyState
+    {
+        //Keys不是一個類別
+        private Keys theKey;         //存放一個對應的按鍵編號
+
+        bool bPress; //狀態,是否按下
+        int repeat; //通知幾次
+        bool bDown;  //狀態,是否按著
+
+        //建構,傳入一個按鍵編號 把它記下來
+        public KeyState(Keys k)
+        {
+            theKey = k;
+            bPress = false; //剛剛壓下去
+            bDown = false;
+            repeat = 0;
         }
 
-        //滑鼠移動的通知
-        private void onMouseMove(object sender, MouseEventArgs e)
+        public void onKeyDown(Keys k)//偵測按鍵
         {
-            mousePos.x = e.X;
-            mousePos.y = e.Y;
-        }
-
-        private void onKeyUp(object sender, KeyEventArgs e)
-        {
-            //按鍵放開的通知
-            if (e.KeyCode == Keys.Space)
+            if (theKey == k)
             {
-                isSpaceDown = false;
+                //偵測到同一個按鍵,按下去
+                if (bDown == false)//是否原本是放開的
+                {
+                    bPress = true;//剛剛壓著的通知
+                }
+                else
+                {
+                    bPress = false; // 原本就是壓著的,持續壓著的通知
+                }
+                bDown = true;
+                repeat++;
             }
+        }
+
+        public void onKeyUp(Keys k)//偵測按鍵
+        {
+            if (theKey == k)
+            {
+                //偵測到同一個按鍵,放開
+                bDown = false;
+                bPress = false;
+                repeat = 0;
+            }
+        }
+        public bool isPress()//回報是否剛剛按下按鍵
+        {
+         return bPress;
+        }
+        /*
+        public void onTimer()
+        {
+
+        }
+        */
+        public bool isDown()//回報是否壓著
+        {
+            return bDown;
         }
     }
     //類別
