@@ -290,21 +290,20 @@ namespace WinFormCirclePunch
         //時間到了就會呼叫onTimer
         private void onTimer(object sender, EventArgs e)
         {
-            //on timer 就是主迴圈 main loop 
-            /*
-            keySpace.onTimer();
+            //on timer 就是主迴圈 main loop             
+            keySpace.onTimer();//bPress
             keyUp.onTimer();
             keyDown.onTimer();
             keyLeft.onTimer();
             keyRight.onTimer();
-            */
-            /*
+            
+
             if (keySpace.isPress())//剛剛壓下去
             {
                 //發射子彈
                 fireBullet();
             }
-            */
+
             if (keySpace.isDown())//持續壓著
             {
                 //按住空白鍵
@@ -330,7 +329,7 @@ namespace WinFormCirclePunch
             }
             if (keyRight.isDown())
             {
-                player.y += PLAYER_SPEED;
+                player.x += PLAYER_SPEED;
             }
 
             makeMonsterTime -= 1.0f / REQUIRE_FPS; // 1/30秒
@@ -407,9 +406,27 @@ namespace WinFormCirclePunch
             */
         }
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Up
+                || keyData == Keys.Down
+                || keyData == Keys.Left
+                || keyData == Keys.Right)
+            {
+                onKeyDown(this, new KeyEventArgs(keyData));
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
         //按下某顆按鍵的通知
         private void onKeyDown(object sender, KeyEventArgs e)
         {
+            keySpace.onKeyDown(e.KeyCode);
+            keyUp.onKeyDown(e.KeyCode);
+            keyDown.onKeyDown(e.KeyCode);
+            keyLeft.onKeyDown(e.KeyCode);
+            keyRight.onKeyDown(e.KeyCode);
+
             
             //e.KeyChar 按鍵編號
             if (e.KeyCode == Keys.D)//d100
@@ -421,12 +438,6 @@ namespace WinFormCirclePunch
             if (e.KeyCode == Keys.W)//w119 
                 player.y -= PLAYER_SPEED;
             
-
-            keySpace.onKeyDown(e.KeyCode);
-            keyUp.onKeyDown(e.KeyCode);
-            keyDown.onKeyDown(e.KeyCode);
-            keyLeft.onKeyDown(e.KeyCode);
-            keyRight.onKeyDown(e.KeyCode);
 
             //按下按鍵就發射子彈
             /*
@@ -453,11 +464,12 @@ namespace WinFormCirclePunch
     class KeyState
     {
         //Keys不是一個類別
-        private Keys theKey;         //存放一個對應的按鍵編號
+        private Keys theKey;//存放一個對應的按鍵編號
 
-        bool bPress; //狀態,是否按下
-        int repeat; //通知幾次
-        bool bDown;  //狀態,是否按著
+        int repeat;     //通知幾次
+        bool bPress;    //狀態,是否剛剛按下按下
+        bool bDown;     //狀態,目前這次是否按著
+        bool pPreDown;  //上次onTimer是否壓著
 
         //建構,傳入一個按鍵編號 把它記下來
         public KeyState(Keys k)
@@ -472,6 +484,7 @@ namespace WinFormCirclePunch
         {
             if (theKey == k)
             {
+                /*
                 //偵測到同一個按鍵,按下去
                 if (bDown == false)//是否原本是放開的
                 {
@@ -481,6 +494,7 @@ namespace WinFormCirclePunch
                 {
                     bPress = false; // 原本就是壓著的,持續壓著的通知
                 }
+                */
                 bDown = true;
                 repeat++;
             }
@@ -493,24 +507,44 @@ namespace WinFormCirclePunch
                 //偵測到同一個按鍵,放開
                 bDown = false;
                 bPress = false;
+                pPreDown = false;
                 repeat = 0;
             }
         }
+
         public bool isPress()//回報是否剛剛按下按鍵
         {
-         return bPress;
+            return bPress;
         }
-        /*
-        public void onTimer()
-        {
 
+        public void onTimer()//timer通知時呼叫
+        {
+            //bPress的偵測
+            if (bDown == true)//此時是壓著的
+            {
+                if (pPreDown == false)//上次是放開的
+                {
+                    bPress = true;
+                }
+                else//上次是壓著的
+                {
+                    bPress = false;
+                }
+            }
+            else
+            {
+                //這次是放開的
+                bPress = false;
+            }
+            pPreDown = bDown;//把這次的狀態記下來,下次就可以用這個狀態
         }
-        */
+
         public bool isDown()//回報是否壓著
         {
             return bDown;
         }
     }
+
     //類別
     //存放座標資料
     class Point
