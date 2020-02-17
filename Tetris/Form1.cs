@@ -180,6 +180,30 @@ namespace Tetris
 
             //Invalidate();//通知重繪畫面，把背景塗白然後重繪
         }
+
+        private bool checkOutside()//檢查有沒有出界
+        {
+            for (int i = 0; i < MOVE_CELL_H_CONST; i++)
+            {
+                for (int m = 0; m < MOVE_CELL_W_CONST; m++)
+                {
+                    //i = 直的 , m=衡的 小方塊座標
+                    if (vvMoveCell[i][m] != CELL_NULL)
+                    {
+                        //把小方塊棋盤的座標轉換成大方塊的座標
+                        int tx = (m + moveCellX);
+                        int ty = (i + moveCellY);
+                        if (tx >= CELL_W_CONST)// 右邊出界
+                            return true;
+                        if (tx < 0) //左邊出界
+                            return true;
+                        if (ty >= CELL_H_CONST) //下面出界
+                            return true;
+                    }
+                }
+            }
+            return false;
+        }
         private void onTimer(object sender, EventArgs e)
         {
             //on timer 就是主迴圈 main loop             
@@ -188,6 +212,10 @@ namespace Tetris
             keyDown.onTimer();
             keyLeft.onTimer();
             keyRight.onTimer();
+
+            //記下原本的座標
+            int oriX = moveCellX;
+            int oriY = moveCellY;
 
             //操作方塊移動設定 下、右、左
             if (keyDown.isPress())
@@ -199,18 +227,13 @@ namespace Tetris
 
             //檢查4*4內的塗色方塊有沒有出界
             //如果有出界，拉回原位
-            for (int i = 0; i < MOVE_CELL_H_CONST; i++)
+            if (checkOutside())
             {
-                for (int m = 0; m < MOVE_CELL_W_CONST; m++)
-                {
-                    //i = 直的 , m=衡的 小方塊座標
-                    //把小方塊棋盤的座標轉換成大方塊的座標
-                    int tx = (m + moveCellX);
-                    int ty = (i + moveCellY);
-
-                    drawGame();
-                }
+                moveCellX = oriX;
+                moveCellY = oriY;
             }
+
+            drawGame();
         }
 
         private void onKeyDown(object sender, KeyEventArgs e)
