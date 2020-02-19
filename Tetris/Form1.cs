@@ -28,12 +28,12 @@ namespace Tetris
 
         private const int CELL_SIZE = 25;
 
-        private const int CELL_W_CONST = 10;
-        private const int CELL_H_CONST = 20;
+        private const int CELL_W_COUNT = 10;
+        private const int CELL_H_COUNT = 20;
         private int[][] vvCell; //二維的陣列
 
-        private const int MOVE_CELL_W_CONST = 4;
-        private const int MOVE_CELL_H_CONST = 4;
+        private const int MOVE_CELL_W_COUNT = 4;
+        private const int MOVE_CELL_H_COUNT = 4;
         private int[][] vvMoveCell; //移動中的方塊
         private int moveCellX; //4*4的左上角的CELL,對應到20*20的哪一個位置
         private int moveCellY;
@@ -72,16 +72,16 @@ namespace Tetris
 
             //20個一維陣列
             //20個一維陣列的參照
-            vvCell = new int[CELL_H_CONST][];
+            vvCell = new int[CELL_H_COUNT][];
 
             //i = 直的 , m=衡的
-            for (int i = 0; i < CELL_H_CONST; i++)
+            for (int i = 0; i < CELL_H_COUNT; i++)
             {
                 //new 一個大小為10的一維陣列
                 //new 10個INT
-                vvCell[i] = new int[CELL_W_CONST];
+                vvCell[i] = new int[CELL_W_COUNT];
 
-                for (int m = 0; m < CELL_W_CONST; m++)
+                for (int m = 0; m < CELL_W_COUNT; m++)
                 {
                     //把所有的格子都設為空格(null)
                     vvCell[i][m] = CELL_NULL;
@@ -90,14 +90,14 @@ namespace Tetris
 
             //4*4
             //4個一維陣列的參照
-            vvMoveCell = new int[MOVE_CELL_H_CONST][];
+            vvMoveCell = new int[MOVE_CELL_H_COUNT][];
 
             //i = 直的 , m=衡的
-            for (int i = 0; i < MOVE_CELL_H_CONST; i++)
+            for (int i = 0; i < MOVE_CELL_H_COUNT; i++)
             {
-                vvMoveCell[i] = new int[MOVE_CELL_W_CONST];
+                vvMoveCell[i] = new int[MOVE_CELL_W_COUNT];
 
-                for (int m = 0; m < MOVE_CELL_W_CONST; m++)
+                for (int m = 0; m < MOVE_CELL_W_COUNT; m++)
                 {
                     //把所有的格子都設為空格(null)
                     vvMoveCell[i][m] = CELL_NULL;
@@ -125,12 +125,12 @@ namespace Tetris
             backGraphics.FillRectangle(Brushes.White, 0, 0, VIEW_W, VIEW_H);
 
             //畫出範圍黑線
-            backGraphics.DrawRectangle(Pens.Black, 0, 0, CELL_SIZE * CELL_W_CONST, CELL_SIZE * CELL_H_CONST);
+            backGraphics.DrawRectangle(Pens.Black, 0, 0, CELL_SIZE * CELL_W_COUNT, CELL_SIZE * CELL_H_COUNT);
 
             //畫20*20 根據對應的座標資料 塗方塊顏色
-            for (int i = 0; i < CELL_H_CONST; i++)
+            for (int i = 0; i < CELL_H_COUNT; i++)
             {
-                for (int m = 0; m < CELL_W_CONST; m++)
+                for (int m = 0; m < CELL_W_COUNT; m++)
                 {
                     //i = 直的 , m=衡的
                     int tx = m * CELL_SIZE;
@@ -151,9 +151,9 @@ namespace Tetris
                 }
             }
             //畫4*4
-            for (int i = 0; i < MOVE_CELL_H_CONST; i++)
+            for (int i = 0; i < MOVE_CELL_H_COUNT; i++)
             {
-                for (int m = 0; m < MOVE_CELL_W_CONST; m++)
+                for (int m = 0; m < MOVE_CELL_W_COUNT; m++)
                 {
                     //i = 直的 , m=衡的
                     int tx = (m + moveCellX) * CELL_SIZE;
@@ -180,12 +180,32 @@ namespace Tetris
 
             //Invalidate();//通知重繪畫面，把背景塗白然後重繪
         }
+        private bool checkOverlap()//檢查4*4k的cell和20*20的cell,實心的部分有沒有重疊
+        {
+            for (int i = 0; i < MOVE_CELL_H_COUNT; i++)
+            {
+                for (int m = 0; m < MOVE_CELL_W_COUNT; m++)
+                {
+                    //i = 直的 , m=衡的 小方塊座標
+                    if (vvMoveCell[i][m] != CELL_NULL)
+                    {
+                        //4*4的座標,轉20*10的座標
+                        int tx = (m + moveCellX);
+                        int ty = (i + moveCellY);
 
+                        //判斷4*4的實心格有沒有重疊到20*10的實心格
+                        if (vvCell[ty][tx] != CELL_NULL)
+                                return true;//有重疊
+                    }
+                }
+            }
+            return false;//沒重疊
+        }
         private bool checkOutside()//檢查有沒有出界
         {
-            for (int i = 0; i < MOVE_CELL_H_CONST; i++)
+            for (int i = 0; i < MOVE_CELL_H_COUNT; i++)
             {
-                for (int m = 0; m < MOVE_CELL_W_CONST; m++)
+                for (int m = 0; m < MOVE_CELL_W_COUNT; m++)
                 {
                     //i = 直的 , m=衡的 小方塊座標
                     if (vvMoveCell[i][m] != CELL_NULL)
@@ -193,16 +213,36 @@ namespace Tetris
                         //把小方塊棋盤的座標轉換成大方塊的座標
                         int tx = (m + moveCellX);
                         int ty = (i + moveCellY);
-                        if (tx >= CELL_W_CONST)// 右邊出界
+                        if (tx >= CELL_W_COUNT)// 右邊出界
                             return true;
                         if (tx < 0) //左邊出界
                             return true;
-                        if (ty >= CELL_H_CONST) //下面出界
+                        if (ty >= CELL_H_COUNT) //下面出界
                             return true;
                     }
                 }
             }
             return false;
+        }
+        private void copyMoveCell()
+        {
+            for (int i = 0; i < MOVE_CELL_H_COUNT; i++)
+            {
+                for (int m = 0; m < MOVE_CELL_W_COUNT; m++)
+                {
+                    //i = 直的 , m=衡的 小方塊座標
+                    if (vvMoveCell[i][m] != CELL_NULL)
+                    {
+                        //把小方塊棋盤的座標轉換成大方塊的座標
+                        int tx = (m + moveCellX);
+                        int ty = (i + moveCellY);
+
+                        vvCell[ty][tx] = vvMoveCell[i][m];
+
+                    }
+                }
+            }
+
         }
         private void onTimer(object sender, EventArgs e)
         {
@@ -218,12 +258,12 @@ namespace Tetris
             int oriY = moveCellY;
 
             //操作方塊移動設定 下、右、左
-            if (keyDown.isPress())
-                moveCellY++;
-            if (keyRight.isPress())
-                moveCellX++;
+
             if (keyLeft.isPress())
                 moveCellX--;
+            if (keyRight.isPress())
+                moveCellX++;
+            checkOverlap();
 
             //檢查4*4內的塗色方塊有沒有出界
             //如果有出界，拉回原位
@@ -233,6 +273,21 @@ namespace Tetris
                 moveCellY = oriY;
             }
 
+            oriX = moveCellX;//記下原本的座標
+            oriY = moveCellY;
+
+            if (keyDown.isPress())
+            {
+                moveCellY++;
+                if (checkOutside() || checkOverlap())//撞底了(出界)
+                {
+                    moveCellX = oriX;//拉回原位
+                    moveCellY = oriY;
+                    copyMoveCell();
+                    moveCellX = 0;
+                    moveCellY = 0;
+                }
+            }
             drawGame();
         }
 
