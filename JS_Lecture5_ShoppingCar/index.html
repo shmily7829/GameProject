@@ -25,7 +25,9 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                         <!-- 設定彈出視窗 -->
-                    <a id="cartNavLink" class="nav-link" href="#cartModal" data-toggle="modal">購物車</a>
+                    <a id="cartNavLink" class="nav-link" href="#cartModal" data-toggle="modal">
+                        購物車 <span id="cartItemHint"></span>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -91,10 +93,13 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+    <!-- sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
     <!-- products.js -->
     <script src="./js/products.js"></script>
     <!-- cart.js -->
     <script src="./js/cart.js"></script>
+
 </body>
 
 </html>
