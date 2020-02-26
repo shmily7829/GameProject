@@ -6,6 +6,7 @@ const logger = require('morgan');
 
 // 取得路由資源
 const indexRouter = require('./routes/index');
+const apiRouter = require("./routes/api");
 
 // 設定應用程式
 const app = express();
@@ -28,6 +29,8 @@ app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 
 //指派indexRouter處理 /~ 路由的相關邏輯
 app.use('/', indexRouter);
+//指派apiRouter負責處理 /api/~ 路由的相關邏輯
+app.use("/api", apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

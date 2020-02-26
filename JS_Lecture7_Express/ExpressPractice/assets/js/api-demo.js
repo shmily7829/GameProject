@@ -33,17 +33,23 @@ $('#getSuccessOrErrorForm').submit(function (event) {
     const form = this;
     // 取得輸入值
     const isSuccess = $('#isSuccess').val();
+    console.log("isSuccess:", isSuccess);
     // 準備要遞送給後端的資料
+    //前後端溝通的格式一定是物件
     const obj = {
         isSuccess: isSuccess
     }
     // 使用POST方法 遞送資料obj至後端API /api/success-or-error
     axios.post('/api/success-or-error', obj)
         .then(function (res) {
+            //如果請求成功而且有了正確回應
+            console.log("請求成功");
             console.log(res);
             renderRes(form, res, true)
         })
         .catch(function (err) {
+            console.log("請求失敗");
+            console.log(err);
             // 如果發生錯誤
             renderRes(form, err, false)
         });
@@ -102,5 +108,24 @@ $('#repeatMyStringForm').submit(function (event) {
     // 取得輸入的值
     const myString = $('#myString').val();
     console.log('[myString]', myString);
+    //準備要給後端資料
+    const obj = {
+        myString: myString //key:value
+    }
+    console.log("obj: ", obj);
+    //發送obj給後端
+    //axios.post  .get .put .delete
+    axios.post("/api/test", obj)
+        //伺服器溝通成功
+        .then(function (res) {
+            console.log("回應: ", res);
+            alert(res.data.msg);
+            renderRes(form, res, true);
+        })
+        //伺服器溝通失敗
+        .catch(function (res) {
+            console.log("錯誤: ", err);
+            renderRes(form, err, false);
+        })
 
 });
