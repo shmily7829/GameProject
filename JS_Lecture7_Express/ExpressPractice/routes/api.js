@@ -1,6 +1,8 @@
 const express = require('express');
 const moment = require('moment');
 const axios = require('axios');
+//Firestore
+const db = require("../db");
 const router = express.Router();
 
 // /api/test post
@@ -83,6 +85,29 @@ router.get('/product/list', function (req, res, next) {
 
 // 新增商品
 router.post('/product/create', function (req, res, next) {
+    const product = req.body;
+    console.log("product", product);
+    //把商品加到資料庫
+
+    db
+        .collection("products")
+        .add(product)
+        //成功
+        .then(r => {
+            console.log("資料寫入成功", r);
+            //通知前端
+            res.status(200).json({
+                msg: "OK"
+            })
+        })
+        //失敗
+        .catch(err => {
+            console.log("資料寫入失敗", err);
+            //通知前端
+            res.status(500).json({
+                error: err
+            })
+        })
 
 });
 

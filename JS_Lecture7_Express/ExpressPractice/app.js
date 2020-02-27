@@ -7,6 +7,7 @@ const logger = require('morgan');
 // 取得路由資源
 const indexRouter = require('./routes/index');
 const apiRouter = require("./routes/api");
+const productRouter = require("./routes/product")
 
 // 設定應用程式
 const app = express();
@@ -29,6 +30,8 @@ app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 
 //指派indexRouter處理 /~ 路由的相關邏輯
 app.use('/', indexRouter);
+app.use("/product", productRouter)
+
 //指派apiRouter負責處理 /api/~ 路由的相關邏輯
 app.use("/api", apiRouter);
 

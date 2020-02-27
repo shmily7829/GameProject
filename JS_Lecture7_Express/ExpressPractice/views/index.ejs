@@ -17,7 +17,12 @@
     <div class="container">
       <h1>商品列表</h1>
       <div class="row">
-
+        <% products.forEach(product => { %>
+        <div class="col-md-4">
+          <%= product.name %>
+          <%= product.price %>
+        </div>
+        <% }) %>
       </div>
     </div>
   </section>

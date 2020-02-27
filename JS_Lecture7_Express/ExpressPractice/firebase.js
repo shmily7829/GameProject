@@ -4,5 +4,10 @@
 const admin = require("firebase-admin");
 
 // TODO: 初始化FIREBASE
+const serviceAccount = require("./key.json");
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://csie-325-shiya.firebaseio.com"
+})
 
 module.exports = admin;

@@ -55,6 +55,16 @@
             };
             console.log('[新增產品]', product);
             // TODO: 呼叫新增商品API
+            //傳送資料給後端用 axios.post .then() .catch
+            axios.post("/api/product/create", product)
+                //成功(資料成功遞送 並且後端有回應)
+                .then(function (res) {
+                    console.log("res", res);
+                })
+                //失敗
+                .catch(function (err) {
+                    console.log("err", err);
+                })
         });
     </script>
 </body>
